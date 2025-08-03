@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🧠</span>
+            <span class="logo-text">FocusFlow AI</span>
+        </div>
+        <div class="ai-status" id="aiStatus">
+            <div class="ai-dot" id="aiIndicator"></div>
+            <span class="ai-text">AI Active</span>
+        </div>
+    </div>
+
+    <div class="view" id="timerView">
+        <div class="timer-container">
+            <div class="timer-ring">
+                <svg class="timer-svg" viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="timer-circle-bg" cx="100" cy="100" r="90"/>
+                    <circle class="timer-circle-progress" id="progressCircle" cx="100" cy="100" r="90"/>
+                </svg>
+                <div class="timer-content">
+                    <div class="timer-display" id="timer">25:00</div>
+                    <div class="phase-text" id="phase">Ready to Focus</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-section">
+            <div class="control-buttons">
+                <button id="startBtn" class="control-btn play-btn" title="Start Timer (Space)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button id="pauseBtn" class="control-btn pause-btn" style="display: none;" title="Pause Timer (Space)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                    </svg>
+                </button>
+                <button id="resetBtn" class="control-btn reset-btn" title="Reset Timer (⌘+R)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="tasks-preview" id="tasksPreview">
+            <div class="tasks-preview-header">
+                <h3>Current Focus</h3>
+                <button id="editTasksBtn" class="edit-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="task-list-preview" id="taskListDisplay"></div>
+        </div>
+
+        <div class="nav-section">
+            <button id="navToTasksBtn" class="nav-btn">
+                <span class="nav-icon">📝</span>
+                <span>Tasks</span>
+            </button>
+            <button id="navToStatsBtn" class="nav-btn">
+                <span class="nav-icon">📊</span>
+                <span>Stats</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="view" id="tasksView" style="display: none;">
+        <div class="view-header">
+            <button id="tasksBackBtn" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h2>Task Management</h2>
+        </div>
+
+        <div class="tasks-content">
+            <p class="tasks-description">
+                Add specific tasks to help the AI understand what you're working on. It will intelligently block distracting sites.
+            </p>
+
+            <div class="task-input-wrapper">
+                <input
+                        type="text"
+                        id="newTaskInput"
+                        placeholder="e.g., Write Q4 marketing report"
+                        autocomplete="off"
+                />
+                <button id="addTaskBtn" class="add-task-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    Add
+                </button>
+            </div>
+
+            <div class="tasks-list" id="tasksList"></div>
+
+            <div class="tasks-tips">
+                <h4>💡 Pro Tips</h4>
+                <ul>
+                    <li>Be specific: "Debug login API" instead of "coding"</li>
+                    <li>Break down large projects into focused tasks</li>
+                    <li>AI learns from your task patterns over time</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="statsView" style="display: none;">
+        <div class="view-header">
+            <button id="statsBackBtn" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h2>Your Progress</h2>
+        </div>
+
+        <div class="stats-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="todayCount">0</div>
+                    <div class="stat-label">Sessions Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-value" id="blockedCount">0</div>
+                    <div class="stat-label">Sites Blocked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-value" id="totalTime">0h</div>
+                    <div class="stat-label">Total Focus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="streakCount">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+
+            <div class="motivation-card">
+                <div class="motivation-icon">✨</div>
+                <p id="motivationText">Keep going! You're building great habits.</p>
+            </div>
+
+            <div class="keyboard-shortcuts">
+                <h4>⌨️ Keyboard Shortcuts</h4>
+                <div class="shortcut">
+                    <kbd>Space</kbd> Start/Pause timer
+                </div>
+                <div class="shortcut">
+                    <kbd>⌘ + R</kbd> Reset timer
+                </div>
+                <div class="shortcut">
+                    <kbd>T</kbd> Open tasks
+                </div>
+                <div class="shortcut">
+                    <kbd>S</kbd> View stats
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "FocusFlow AI - Smart Productivity Guardian",
+  "version": "3.1.0",
+  "description": "AI-powered focus assistant that adapts to your current tasks and blocks distracting websites intelligently",
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications",
+    "webNavigation",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html", "blocked.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
